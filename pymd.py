@@ -1,34 +1,39 @@
+import getopt
 import sys
 import os
 import markdown2
 import re
 import shutil
 
+#leaving these outside and capitalizing to act as psuedo constants
+DS = "/"
+EXPORT_DIR = "export"
+
 class Pymd:
 
-    def __init__(self, args = []):
-        if len(args) > 1:
-            self.baseDir = args[1]
+    def __init__(self, path = None):
+        if path is not None:
+            self.baseDir = path
         else:
             self.baseDir = os.getcwd()
 
-    def readFile(self, fpath):
-        fh = open(fpath, 'r')
+    def readFile(self, fPath):
+        fh = open(fPath, 'r')
         content = fh.read()
         fh.close()
         return content
 
-    def convert(self, fcontents):
-        return markdown2.markdown(fcontents)
+    def convert(self, fContents):
+        return markdown2.markdown(fContents)
 
     def mkDir(self, dirPath):
         if os.path.exists(dirPath) is False :
             os.makedirs(dirPath)
         return os.path.exists(dirPath)
 
-    def mkFile(self, fcontents, path):
+    def mkFile(self, fContents, path):
         fh = open(path, 'w')
-        fh.write(fcontents)
+        fh.write(fContents)
         fh.close()
         return os.path.exists(path)
 
@@ -36,31 +41,57 @@ class Pymd:
         if os.path.exists(path) is False:
             return False
 
-        if os.path.exists(self.baseDir+"/export") is False:
-            self.mkDir(self.baseDir+"/export")
+        if os.path.exists(self.baseDir+DS+EXPORT_DIR) is False:
+            self.mkDir(self.baseDir+DS+EXPORT_DIR)
 
         name = os.path.basename(path)
-        shutil.copy2(path, self.baseDir+"/export/"+dirs+name )
-        return os.path.exists(self.baseDir+"/export/"+dirs+name)
+        shutil.copy2(path, self.baseDir+DS+EXPORT_DIR+DS+dirs+name )
+        return os.path.exists(self.baseDir+DS+EXPORT_DIR+DS+dirs+name)
 
-    def mdReplace(self, fcontents):
-        return re.sub(r'href=(.*)\.md', "href=\g<1>.html", fcontents, flags=re.IGNORECASE)
+    def mdReplace(self, fContents):
+        return re.sub(r'href=(.*)\.md', "href=\g<1>.html", fContents, flags=re.IGNORECASE)
 
     def traverse(self):
         for root, dirs, files in os.walk(self.baseDir):
-            relPath = root.split(self.baseDir)[1]+"/"
-            print relPath
+            relPath = root.split(self.baseDir)[1]+DS
             for file in files:
-                self.mkDir(self.baseDir+"/export/"+relPath)
+                print "Processing "+ root
+                self.mkDir(self.baseDir+DS+EXPORT_DIR+DS+relPath)
                 if file.endswith(".md"):
                     newFileName = file.replace('.md', ".html")
-                    self.mkFile(self.convert(self.readFile(root+"/"+file)), self.baseDir+"/export/"+relPath+newFileName)
+                    self.mkFile(self.convert(self.readFile(root+DS+file)), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
                 else:
-                    self.fCopy(root+"/"+file, relPath)
+                    self.fCopy(root+DS+file, relPath)
 
         print "YAY!!!! All Done."
         return True
 
-if __name__ == '__main__':
-    args = sys.argv
-    Pymd.main(args)
+
+def main(argv):
+
+    usage = """
+        -h --help                 Prints this
+        -p --path (dirpath)       Path of directory to process
+    """
+    path = os.getcwd()
+    try:
+        opt, args = getopt.getopt(argv, "h:p:", ["help", "path="])
+    except getopt.GetoptError, err:
+        print str(err)
+        print usage
+        sys.exit(2)
+    for o, a in opt:
+        if o in ("-h", "--help"):
+            print usage
+            sys.exit()
+        elif o in ("-p", "--path"):
+            path = a
+        else:
+            assert False, "unhandled option"
+
+    p = Pymd(path = path)
+    p.traverse()
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
+

@@ -4,7 +4,7 @@ from pymd import *
 class TestPymd(unittest.TestCase):
 
     def setUp(self):
-        self.pymd = Pymd([None, '/Users/mark/Dropbox/py-demo/pymd/sample'])
+        self.pymd = Pymd(path = '/Users/mark/Dropbox/py-demo/pymd/sample')
 
 
     def testBasedir(self):
@@ -13,7 +13,7 @@ class TestPymd(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def testBasedirArgs(self):
-        stub = Pymd([None, '/Users/mark/fubar'])
+        stub = Pymd(path = '/Users/mark/fubar')
         expected = "/Users/mark/fubar"
         actual = stub.baseDir
         self.assertEqual(expected, actual)
@@ -25,7 +25,7 @@ class TestPymd(unittest.TestCase):
             shutil.rmtree(self.pymd.baseDir+"/export")
 
     def testFcopy(self):
-        actual = self.pymd.fCopy('/Users/mark/Dropbox/py-demo/pymd/css/style.css', 'css')
+        actual = self.pymd.fCopy('/Users/mark/Dropbox/py-demo/pymd/sample/css/style.css', 'css')
         self.assertTrue(actual)
 
     def testMkfile(self):
