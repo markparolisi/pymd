@@ -18,6 +18,12 @@ class TestPymd(unittest.TestCase):
         actual = stub.baseDir
         self.assertEqual(expected, actual)
 
+    def testBasedirArgsPWD(self):
+        stub = Pymd()
+        expected = "/Users/mark/Dropbox/py-demo/pymd"
+        actual = stub.baseDir
+        self.assertEqual(expected, actual)
+
     def testMkdir(self):
         actual = self.pymd.mkDir(self.pymd.baseDir+"/export")
         self.assertTrue(actual)
@@ -28,11 +34,15 @@ class TestPymd(unittest.TestCase):
         actual = self.pymd.fCopy('/Users/mark/Dropbox/py-demo/pymd/sample/css/style.css', 'css')
         self.assertTrue(actual)
 
+    def testFcopy(self):
+        actual = self.pymd.fCopy('/foo.bar', 'somedir')
+        self.assertFalse(actual)
+
     def testMkfile(self):
         actual = self.pymd.mkFile('hello world', '/Users/mark/Dropbox/py-demo/pymd/helloworld.txt')
         self.assertTrue(actual)
 
-    def testVerifyMkFIle(self):
+    def testVerifyMdFile(self):
         expected = 'hello world'
         self.pymd.mkFile(expected, '/Users/mark/Dropbox/py-demo/pymd/helloworld.txt')
         actual = self.pymd.readFile('/Users/mark/Dropbox/py-demo/pymd/helloworld.txt')

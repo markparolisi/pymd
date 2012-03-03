@@ -1,9 +1,12 @@
+from __future__ import with_statement
 import getopt
 import sys
 import os
 import markdown2
 import re
 import shutil
+from contextlib import closing
+from zipfile import ZipFile, ZIP_DEFLATED
 
 #leaving these outside and capitalizing to act as psuedo constants
 DS = "/"
@@ -51,6 +54,15 @@ class Pymd:
     def mdReplace(self, fContents):
         return re.sub(r'href=(.*)\.md', "href=\g<1>.html", fContents, flags=re.IGNORECASE)
 
+    def zip(self, path, archiveName):
+        assert os.path.isdir(path)
+        with closing(ZipFile(archiveName, "w", ZIP_DEFLATED)) as z:
+            for root, dirs, files in os.walk(path):
+               for fn in files:
+                    absfn = os.path.join(root, fn)
+                    zfn = absfn[len(path)+len(os.sep):]
+                    z.write(absfn, zfn)
+
     def traverse(self):
         for root, dirs, files in os.walk(self.baseDir):
             relPath = root.split(self.baseDir)[1]+DS
@@ -64,18 +76,19 @@ class Pymd:
                     self.fCopy(root+DS+file, relPath)
 
         print "YAY!!!! All Done."
-        return True
 
 
 def main(argv):
 
     usage = """
         -h --help                 Prints this
+        -z --zip                  Zip Archive the export directory
         -p --path (dirpath)       Path of directory to process
     """
     path = os.getcwd()
+    zip = None
     try:
-        opt, args = getopt.getopt(argv, "h:p:", ["help", "path="])
+        opt, args = getopt.getopt(argv, "hzp:", ["help", "zip", "path="])
     except getopt.GetoptError, err:
         print str(err)
         print usage
@@ -86,11 +99,15 @@ def main(argv):
             sys.exit()
         elif o in ("-p", "--path"):
             path = a
+        elif o in ("-z", "--zip"):
+            zip = True
         else:
             assert False, "unhandled option"
 
     p = Pymd(path = path)
     p.traverse()
+    if zip is True:
+        p.zip(p.baseDir+DS+EXPORT_DIR, 'archive.zip')
 
 if __name__ == "__main__":
     main(sys.argv[1:])

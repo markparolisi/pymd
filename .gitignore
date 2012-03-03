@@ -1,3 +1,7 @@
+helloworld.html
+.coverage
+/export
+/htmlcov
 .DS_Store
 .idea
 /sample
