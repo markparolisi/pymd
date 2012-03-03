@@ -107,7 +107,7 @@ def main(argv):
     p = Pymd(path = path)
     p.traverse()
     if zip is True:
-        p.zip(p.baseDir+DS+EXPORT_DIR, 'archive.zip')
+        p.zip(p.baseDir+DS+EXPORT_DIR, p.baseDir+DS+EXPORT_DIR+'-archive.zip')
 
 if __name__ == "__main__":
     main(sys.argv[1:])
