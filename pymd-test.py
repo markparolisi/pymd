@@ -68,6 +68,11 @@ class TestPymd(unittest.TestCase):
         actual = self.pymd.mdReplace("<a href='file.md'>text</a>")
         self.assertEqual(expected, actual)
 
+    def testZip(self):
+        self.pymd.zip('/Users/mark/Dropbox/py-demo/pymd/sample/', '/Users/mark/Dropbox/py-demo/pymd/export-archive.zip')
+        actual = os.path.exists('/Users/mark/Dropbox/py-demo/pymd/export-archive.zip')
+        self.assertTrue(actual)
+
     def tearDown(self):
         pass
 
