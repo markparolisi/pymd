@@ -74,16 +74,15 @@ class Pymd:
                     self.mkFile(self.convert(self.readFile(root+DS+file)), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
                 else:
                     self.fCopy(root+DS+file, relPath)
-
         print "YAY!!!! All Done."
 
 
 def main(argv):
 
     usage = """
-        -h --help                 Prints this
-        -z --zip                  Zip Archive the export directory
-        -p --path (dirpath)       Path of directory to process
+        -h --help                 Prints this help text
+        -z --zip                  Zip archive the export directory
+        -p --path (dirpath)       Path of directory to process. Uses PWD if absent
     """
     path = os.getcwd()
     zip = None
@@ -111,4 +110,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-
