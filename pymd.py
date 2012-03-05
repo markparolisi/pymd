@@ -63,6 +63,15 @@ class Pymd:
                     zfn = absfn[len(path)+len(os.sep):]
                     z.write(absfn, zfn)
 
+    def addHeader(self, fContents):
+        for root, dirs, files in os.walk(self.baseDir+DS+EXPORT_DIR):
+            for file in files:
+                if file.endswith('.html'):
+                    f =  open(root+DS+file, 'r+')
+                    content = fContents + f.read()
+                    f.write(content)
+                    f.close()
+
     def traverse(self):
         for root, dirs, files in os.walk(self.baseDir):
             relPath = root.split(self.baseDir)[1]+DS
@@ -70,10 +79,14 @@ class Pymd:
                 print "Processing "+ root
                 self.mkDir(self.baseDir+DS+EXPORT_DIR+DS+relPath)
                 if file.endswith(".md"):
-                    newFileName = file.replace('.md', ".html")
-                    self.mkFile(self.convert(self.readFile(root+DS+file)), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
+                    if os.path.basename(file) == 'header.md':
+                        self.header = self.convert(self.readFile(root+DS+file))
+                    else:
+                        newFileName = file.replace('.md', ".html")
+                        self.mkFile(self.convert(self.readFile(root+DS+file)), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
                 else:
                     self.fCopy(root+DS+file, relPath)
+        self.addHeader(self.header)
         print "YAY!!!! All Done."
 
 
