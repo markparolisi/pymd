@@ -64,6 +64,8 @@ class Pymd:
                     z.write(absfn, zfn)
 
     def addHeader(self, fContents):
+        if self.header is None:
+            return False
         for root, dirs, files in os.walk(self.baseDir+DS+EXPORT_DIR):
             for file in files:
                 if file.endswith('.html'):

@@ -4,11 +4,12 @@ from pymd import *
 class TestPymd(unittest.TestCase):
 
     def setUp(self):
-        self.pymd = Pymd(path = '/Users/mark/Dropbox/py-demo/pymd/sample')
+        self.path = os.getcwd()
+        self.pymd = Pymd(path = self.path+'/doc')
 
 
     def testBasedir(self):
-        expected = "/Users/mark/Dropbox/py-demo/pymd/sample"
+        expected = self.path+"/doc"
         actual = self.pymd.baseDir
         self.assertEqual(expected, actual)
 
@@ -20,7 +21,7 @@ class TestPymd(unittest.TestCase):
 
     def testBasedirArgsPWD(self):
         stub = Pymd()
-        expected = "/Users/mark/Dropbox/py-demo/pymd"
+        expected = self.path
         actual = stub.baseDir
         self.assertEqual(expected, actual)
 
@@ -31,7 +32,7 @@ class TestPymd(unittest.TestCase):
             shutil.rmtree(self.pymd.baseDir+"/export")
 
     def testFcopy(self):
-        actual = self.pymd.fCopy('/Users/mark/Dropbox/py-demo/pymd/sample/css/style.css', 'css')
+        actual = self.pymd.fCopy(self.path+'/doc/css/style.css', 'css')
         self.assertTrue(actual)
 
     def testFcopy(self):
@@ -39,23 +40,20 @@ class TestPymd(unittest.TestCase):
         self.assertFalse(actual)
 
     def testMkfile(self):
-        actual = self.pymd.mkFile('hello world', '/Users/mark/Dropbox/py-demo/pymd/helloworld.txt')
+        actual = self.pymd.mkFile('hello world', self.path+'/helloworld.txt')
         self.assertTrue(actual)
+        os.remove(self.path+'/helloworld.txt')
 
     def testVerifyMdFile(self):
         expected = 'hello world'
-        self.pymd.mkFile(expected, '/Users/mark/Dropbox/py-demo/pymd/helloworld.txt')
-        actual = self.pymd.readFile('/Users/mark/Dropbox/py-demo/pymd/helloworld.txt')
+        self.pymd.mkFile(expected, self.path+'/helloworld.txt')
+        actual = self.pymd.readFile(self.path+'/helloworld.txt')
         self.assertEqual(expected, actual)
 
     def testReadfile(self):
-        expected = """# This is an H1 #
-
-* list item 1
-* list item 2
-"""
-        actual = self.pymd.readFile('/Users/mark/Dropbox/py-demo/pymd/sample/sample.md')
-        message = "expected %s - returned %s actual" % (expected, actual)
+        expected = '<link rel="stylesheet" href="css/style.css" />\n'
+        actual = self.pymd.readFile(self.path+'/doc/header.md')
+        message = "expected %s - returned %s " % (expected, actual)
         self.assertEqual(expected, actual, message)
 
     def testCovert(self):
@@ -69,8 +67,8 @@ class TestPymd(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def testZip(self):
-        self.pymd.zip('/Users/mark/Dropbox/py-demo/pymd/sample/', '/Users/mark/Dropbox/py-demo/pymd/export-archive.zip')
-        actual = os.path.exists('/Users/mark/Dropbox/py-demo/pymd/export-archive.zip')
+        self.pymd.zip(self.path+'/doc/', self.path+'/export-archive.zip')
+        actual = os.path.exists(self.path+'/export-archive.zip')
         self.assertTrue(actual)
 
     def tearDown(self):
