@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from __future__ import with_statement
 import getopt
 import sys
@@ -8,6 +9,11 @@ import re
 import shutil
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
+
+
+__version__ = '0.1'
+__author__ = "Mark Parolisi, John Ciacia, Michael Pretty"
+
 
 #leaving these outside and capitalizing to act as psuedo constants
 DS = "/"

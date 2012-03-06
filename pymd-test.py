@@ -49,6 +49,7 @@ class TestPymd(unittest.TestCase):
         self.pymd.mkFile(expected, self.path+'/helloworld.txt')
         actual = self.pymd.readFile(self.path+'/helloworld.txt')
         self.assertEqual(expected, actual)
+        os.remove(self.path+'/helloworld.txt')
 
     def testReadfile(self):
         expected = '<link rel="stylesheet" href="css/style.css" />\n'
@@ -70,6 +71,7 @@ class TestPymd(unittest.TestCase):
         self.pymd.zip(self.path+'/doc/', self.path+'/export-archive.zip')
         actual = os.path.exists(self.path+'/export-archive.zip')
         self.assertTrue(actual)
+        os.remove(self.path+'/export-archive.zip')
 
     def tearDown(self):
         pass
