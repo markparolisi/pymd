@@ -26,6 +26,7 @@ class Pymd:
             self.baseDir = path
         else:
             self.baseDir = os.getcwd()
+        self.header = None
 
     def readFile(self, fPath):
         fh = open(fPath, 'r')
@@ -92,7 +93,7 @@ class Pymd:
                         self.header = self.convert(self.readFile(root+DS+file))
                     else:
                         newFileName = file.replace('.md', ".html")
-                        self.mkFile(self.convert(self.readFile(root+DS+file)), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
+                        self.mkFile(self.mdReplace(self.convert(self.readFile(root+DS+file))), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
                 else:
                     self.fCopy(root+DS+file, relPath)
         self.addHeader(self.header)
