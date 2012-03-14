@@ -71,15 +71,17 @@ class Pymd:
                     zfn = absfn[len(path)+len(os.sep):]
                     z.write(absfn, zfn)
 
-    def addHeader(self, fContents):
+    def addHeader(self, headerContents):
         if self.header is None:
             return False
         for root, dirs, files in os.walk(self.baseDir+DS+EXPORT_DIR):
             for file in files:
                 if file.endswith('.html'):
-                    f =  open(root+DS+file, 'r+')
-                    content = fContents + f.read()
-                    f.write(content)
+                    f = open(root+DS+file,'r')
+                    fContent = f.read()
+                    f.close()
+                    f =  open(root+DS+file, 'w')
+                    f.write(headerContents + fContent)
                     f.close()
 
     def traverse(self):
