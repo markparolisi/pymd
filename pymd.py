@@ -44,7 +44,7 @@ class Pymd:
 
     def mkFile(self, fContents, path):
         fh = open(path, 'w')
-        fh.write(fContents)
+        fh.write(fContents.encode('utf-8'))
         fh.close()
         return os.path.exists(path)
 
@@ -92,7 +92,7 @@ class Pymd:
                 self.mkDir(self.baseDir+DS+EXPORT_DIR+DS+relPath)
                 if file.endswith(".md"):
                     if os.path.basename(file) == 'header.md':
-                        self.header = self.convert(self.readFile(root+DS+file))
+                        self.header = self.mdReplace(self.convert(self.readFile(root+DS+file)))
                     else:
                         newFileName = file.replace('.md', ".html")
                         self.mkFile(self.mdReplace(self.convert(self.readFile(root+DS+file))), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
