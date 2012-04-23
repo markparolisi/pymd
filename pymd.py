@@ -44,7 +44,10 @@ class Pymd:
 
     def mkFile(self, fContents, path):
         fh = open(path, 'w')
-        fh.write(fContents.encode('utf-8'))
+        try:
+            fh.write(fContents.encode('utf-8'))
+        except:
+            print "Could not write file"
         fh.close()
         return os.path.exists(path)
 
@@ -69,7 +72,10 @@ class Pymd:
                for fn in files:
                     absfn = os.path.join(root, fn)
                     zfn = absfn[len(path)+len(os.sep):]
-                    z.write(absfn, zfn)
+                    try:
+                        z.write(absfn, zfn)
+                    except:
+                        print "Could not write archive file"
 
     def addHeader(self, headerContents):
         if self.header is None:
@@ -81,7 +87,10 @@ class Pymd:
                     fContent = f.read()
                     f.close()
                     f =  open(root+DS+file, 'w')
-                    f.write(headerContents + fContent)
+                    try:
+                        f.write(headerContents + fContent)
+                    except:
+                        print "Could not write header file"
                     f.close()
 
     def traverse(self):
