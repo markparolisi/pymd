@@ -11,13 +11,13 @@ from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
 
 
-__version__ = '0.1'
+__version__ = '0.3'
 __author__ = "Mark Parolisi, John Ciacia, Michael Pretty"
 
 
-#leaving these outside and capitalizing to act as psuedo constants
-DS = "/"
-EXPORT_DIR = "export"
+# Leaving these outside and capitalizing to act as psuedo constants
+DS          = "/"
+EXPORT_DIR  = "export"
 
 class Pymd:
 
@@ -28,15 +28,26 @@ class Pymd:
             self.baseDir = os.getcwd()
         self.header = None
 
+    # Find and read contents of a file
+    # @param fPath {str} Absolute path to file
+    # @return {str | bool}  Content of of the file or False if file doesn't exist
     def readFile(self, fPath):
+        if os.path.exists(fPath) is False :
+            return False
         fh = open(fPath, 'r')
         content = fh.read()
         fh.close()
         return content
 
+    # Convert markdown content to HTML using the markdown2 module
+    # @param fContents {str} Text to covert
+    # @return {str} The HTML version of the content
     def convert(self, fContents):
         return markdown2.markdown(fContents)
 
+    # Create a new directory
+    # @param dirPath {str} Absolute path to directory
+    # @return {bool} If the new path exists
     def mkDir(self, dirPath):
         if os.path.exists(dirPath) is False :
             try:
@@ -67,9 +78,16 @@ class Pymd:
         shutil.copy2(path, self.baseDir+DS+EXPORT_DIR+DS+dirs+name )
         return os.path.exists(self.baseDir+DS+EXPORT_DIR+DS+dirs+name)
 
+    # Scan the contents of the document and replace links ending with .md to .html
+    # @param fContents {str} Text to scan
+    # @return {str} filtered text
     def mdReplace(self, fContents):
         return re.sub(r'href=(.*)\.md', "href=\g<1>.html", fContents, flags=re.IGNORECASE)
 
+    # If the user passes the -z argument, compress the new export directory
+    # @param path {str}
+    # @param archiveName {str}
+    # @return {bool} True if new paths exists or False if the file could not be written
     def zip(self, path, archiveName):
         assert os.path.isdir(path)
         with closing(ZipFile(archiveName, "w", ZIP_DEFLATED)) as z:
@@ -79,10 +97,14 @@ class Pymd:
                     zfn = absfn[len(path)+len(os.sep):]
                     try:
                         z.write(absfn, zfn)
+                        return os.path.exists(path)
                     except:
                         print "Could not write archive file"
                         return False
 
+    # Append new html files with a global header
+    # @param headerContents {str} The file contents of the header file
+    # @return {bool} False if file could not be written
     def addHeader(self, headerContents):
         if self.header is None:
             return False
@@ -92,7 +114,7 @@ class Pymd:
                     f = open(root+DS+file,'r')
                     fContent = f.read()
                     f.close()
-                    f =  open(root+DS+file, 'w')
+                    f = open(root+DS+file, 'w')
                     try:
                         f.write(headerContents + fContent)
                     except:
@@ -121,7 +143,7 @@ class Pymd:
         self.addHeader(self.header)
         print "YAY!!!! All Done."
 
-
+# The CL functionality
 def main(argv):
 
     usage = """
