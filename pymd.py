@@ -39,7 +39,11 @@ class Pymd:
 
     def mkDir(self, dirPath):
         if os.path.exists(dirPath) is False :
-            os.makedirs(dirPath)
+            try:
+                os.makedirs(dirPath)
+            except:
+                print "Could not create export directory - ", dirPath
+                return False
         return os.path.exists(dirPath)
 
     def mkFile(self, fContents, path):
@@ -47,7 +51,8 @@ class Pymd:
         try:
             fh.write(fContents.encode('utf-8'))
         except:
-            print "Could not write file"
+            print "Could not write file - ", path
+            return False
         fh.close()
         return os.path.exists(path)
 
@@ -76,6 +81,7 @@ class Pymd:
                         z.write(absfn, zfn)
                     except:
                         print "Could not write archive file"
+                        return False
 
     def addHeader(self, headerContents):
         if self.header is None:
@@ -91,6 +97,7 @@ class Pymd:
                         f.write(headerContents + fContent)
                     except:
                         print "Could not write header file"
+                        return False
                     f.close()
 
     def traverse(self):
@@ -98,13 +105,17 @@ class Pymd:
             relPath = root.split(self.baseDir)[1]+DS
             for file in files:
                 print "Processing "+ root
-                self.mkDir(self.baseDir+DS+EXPORT_DIR+DS+relPath)
+                self.mkDir(self.baseDir+EXPORT_DIR+relPath)
                 if file.endswith(".md"):
                     if os.path.basename(file) == 'header.md':
                         self.header = self.mdReplace(self.convert(self.readFile(root+DS+file)))
                     else:
                         newFileName = file.replace('.md', ".html")
-                        self.mkFile(self.mdReplace(self.convert(self.readFile(root+DS+file))), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
+                        try:
+                            self.mkFile(self.mdReplace(self.convert(self.readFile(root+DS+file))), self.baseDir+DS+EXPORT_DIR+DS+relPath+newFileName)
+                        except:
+                            print "Could not write file - ", newFileName
+                            return False
                 else:
                     self.fCopy(root+DS+file, relPath)
         self.addHeader(self.header)
