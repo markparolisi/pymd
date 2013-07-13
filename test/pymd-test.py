@@ -1,4 +1,7 @@
 import unittest
+import os
+parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0,parentdir)
 from pymd import *
 
 class TestPymd(unittest.TestCase):
@@ -52,7 +55,7 @@ class TestPymd(unittest.TestCase):
 
     def testReadfile(self):
         expected = '<link rel="stylesheet" href="css/style.css" />\n'
-        actual = self.pymd.readFile(self.path+'/sample/header.md')
+        actual = self.pymd.readFile(self.path+'/test/sample/header.md')
         message = "expected %s - returned %s " % (expected, actual)
         self.assertEqual(expected, actual, message)
 
