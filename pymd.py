@@ -17,7 +17,7 @@ __author__ = "Mark Parolisi, John Ciacia, Michael Pretty"
 
 # Leaving these outside and capitalizing to act as psuedo constants
 DS          = "/"
-EXPORT_DIR  = "html"
+EXPORT_DIR  = "export-html"
 
 class Pymd:
 

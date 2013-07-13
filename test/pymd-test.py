@@ -5,11 +5,10 @@ class TestPymd(unittest.TestCase):
 
     def setUp(self):
         self.path = os.getcwd()
-        self.pymd = Pymd(path = self.path+'/doc')
-
+        self.pymd = Pymd(path = self.path+'/sample')
 
     def testBasedir(self):
-        expected = self.path+"/doc"
+        expected = self.path+"/sample"
         actual = self.pymd.baseDir
         self.assertEqual(expected, actual)
 
@@ -53,7 +52,7 @@ class TestPymd(unittest.TestCase):
 
     def testReadfile(self):
         expected = '<link rel="stylesheet" href="css/style.css" />\n'
-        actual = self.pymd.readFile(self.path+'/doc/header.md')
+        actual = self.pymd.readFile(self.path+'/sample/header.md')
         message = "expected %s - returned %s " % (expected, actual)
         self.assertEqual(expected, actual, message)
 
@@ -68,7 +67,7 @@ class TestPymd(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def testZip(self):
-        self.pymd.zip(self.path+'/doc/', self.path+'/export-archive.zip')
+        self.pymd.zip(self.path+'/sample/', self.path+'/export-archive.zip')
         actual = os.path.exists(self.path+'/export-archive.zip')
         self.assertTrue(actual)
         os.remove(self.path+'/export-archive.zip')
