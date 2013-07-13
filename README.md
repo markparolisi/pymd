@@ -1,4 +1,4 @@
-# PyMD
+# PyMD [![Build Status](https://secure.travis-ci.org/markparolisi/pymd.png?branch=master)](http://travis-ci.org/markparolisi/pymd)
 
 Covert directories of markdown files into HTML microsites
 
