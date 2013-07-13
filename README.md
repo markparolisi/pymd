@@ -15,7 +15,7 @@ python pymd.py --dir my/dir/to/convert
 
 ## Changelog
 
-2013-07-13 1.0.0 Initial release
+2013-07-13 1.0 Initial release
 
 ## License
 

@@ -11,7 +11,7 @@ from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
 
 
-__version__ = '0.5'
+__version__ = '1.0'
 __author__ = "Mark Parolisi, John Ciacia, Michael Pretty"
 
 
